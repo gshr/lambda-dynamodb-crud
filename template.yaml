@@ -62,4 +62,24 @@ Resources:
             Path: /data
             Method: post
   
+  MyLambdaFunction2:
+    Type : AWS::Serverless::Function
+    Properties:
+      Handler : delete.handler
+      Runtime : python3.10
+      CodeUri : .
+      Timeout : 30
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyDatabaseTable
+      Environment:
+          Variables:
+            TABLE_NAME: !Ref MyDatabaseTable
+      Events:
+        ApiGatewayEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApiGateway
+            Path: /data
+            Method: delete
 
