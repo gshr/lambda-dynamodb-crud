@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:  AWS::Serverless-2016-10-31
+Description: CRUD API Gateway LAMBDA DYNAMODB
+
+Resources:
+  MyApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+
+  MyDatabaseTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName : uid
+          AttributeType : S
+      KeySchema:
+        - AttributeName: uid
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TableName: user
+
+  MyLambdaFunction:
+    Type : AWS::Serverless::Function
+    Properties:
+      Handler : main.handler
+      Runtime : python3.10
+      CodeUri : .
+      Timeout : 30
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyDatabaseTable
+      Environment:
+          Variables:
+            TABLE_NAME: !Ref MyDatabaseTable
+      Events:
+        ApiGatewayEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApiGateway
+            Path: /data
+            Method: get
+
+  MyLambdaFunction1:
+    Type : AWS::Serverless::Function
+    Properties:
+      Handler : post.handler
+      Runtime : python3.10
+      CodeUri : .
+      Timeout : 30
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyDatabaseTable
+      Environment:
+          Variables:
+            TABLE_NAME: !Ref MyDatabaseTable
+      Events:
+        ApiGatewayEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApiGateway
+            Path: /data
+            Method: post
+  
+
