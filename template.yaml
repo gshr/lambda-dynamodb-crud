@@ -23,6 +23,7 @@ Resources:
   MyLambdaFunction:
     Type : AWS::Serverless::Function
     Properties:
+      FunctionName : RetrieveDataFunction
       Handler : main.handler
       Runtime : python3.10
       CodeUri : .
@@ -44,6 +45,7 @@ Resources:
   MyLambdaFunction1:
     Type : AWS::Serverless::Function
     Properties:
+      FunctionName : PostDataFunction
       Handler : post.handler
       Runtime : python3.10
       CodeUri : .
@@ -65,6 +67,7 @@ Resources:
   MyLambdaFunction2:
     Type : AWS::Serverless::Function
     Properties:
+      FunctionName : DeleteDataFunction
       Handler : delete.handler
       Runtime : python3.10
       CodeUri : .
